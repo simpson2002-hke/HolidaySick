@@ -1,0 +1,9 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE users (id TEXT PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, display_name TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin')), default_currency TEXT DEFAULT 'USD', created_at TEXT DEFAULT CURRENT_TIMESTAMP, disabled_at TEXT);
+CREATE TABLE trips (id TEXT PRIMARY KEY, creator_user_id TEXT NOT NULL REFERENCES users(id), name TEXT NOT NULL, start_date TEXT, end_date TEXT, currency TEXT NOT NULL DEFAULT 'USD', status TEXT NOT NULL DEFAULT 'planning', created_at TEXT DEFAULT CURRENT_TIMESTAMP, updated_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE trip_members (id TEXT PRIMARY KEY, trip_id TEXT NOT NULL REFERENCES trips(id), user_id TEXT NOT NULL REFERENCES users(id), role TEXT NOT NULL DEFAULT 'member', joined_at TEXT DEFAULT CURRENT_TIMESTAMP, UNIQUE(trip_id,user_id));
+CREATE TABLE expenses (id TEXT PRIMARY KEY, trip_id TEXT NOT NULL REFERENCES trips(id), payer_user_id TEXT NOT NULL REFERENCES users(id), amount INTEGER NOT NULL, currency TEXT NOT NULL, description TEXT NOT NULL, category TEXT, expense_date TEXT, receipt_r2_key TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP, updated_at TEXT DEFAULT CURRENT_TIMESTAMP, deleted_at TEXT);
+CREATE TABLE expense_shares (id TEXT PRIMARY KEY, expense_id TEXT NOT NULL REFERENCES expenses(id), user_id TEXT NOT NULL REFERENCES users(id), share_amount INTEGER NOT NULL, UNIQUE(expense_id,user_id));
+CREATE TABLE settings (id TEXT PRIMARY KEY, scope TEXT NOT NULL, setting_key TEXT NOT NULL, value_json TEXT NOT NULL, updated_at TEXT DEFAULT CURRENT_TIMESTAMP, UNIQUE(scope,setting_key));
+CREATE TABLE audit_log (id TEXT PRIMARY KEY, actor_user_id TEXT REFERENCES users(id), action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT NOT NULL, before_json TEXT, after_json TEXT, timestamp TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX expenses_trip_updated ON expenses(trip_id,updated_at);
