@@ -31,12 +31,12 @@ Amounts are stored as integer minor units (for example, cents), avoiding floatin
 
 ## Publish a live preview with GitHub Pages
 
-The repository includes a GitHub Actions workflow that builds the web app and publishes it to GitHub Pages whenever you push to the `work` branch.
+The repository includes a GitHub Actions workflow that builds the web app and publishes it to GitHub Pages whenever you push to the `main` or `work` branch.
 
 1. Create a GitHub repository, then add it as this project's remote:
    ```bash
    git remote add origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME.git
-   git push -u origin work
+   git push -u origin main
    ```
 2. On GitHub, open **Settings → Pages**. Under **Build and deployment**, select **GitHub Actions** as the source, then save. This is required only once per repository.
 3. Open the **Actions** tab and select **Deploy web app to GitHub Pages**. The first push starts it automatically; use **Run workflow** to publish manually later.
@@ -46,5 +46,5 @@ The repository includes a GitHub Actions workflow that builds the web app and pu
 
 - The live preview contains sample travel and expense data only; it does **not** connect to the Worker yet.
 - GitHub Pages is suitable for hosting this frontend. Deploy the API separately with the Cloudflare steps above, and use Worker secrets—not GitHub Pages variables—for private keys.
-- If your default branch is not `work`, update `branches: [work]` in `.github/workflows/deploy-pages.yml` to the branch you push.
+- If your production branch has a different name, update `branches: [main, work]` in `.github/workflows/deploy-pages.yml` to include it.
 - For a private repository, GitHub Pages availability depends on your GitHub plan and organization policy.
