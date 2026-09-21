@@ -1,0 +1,12 @@
+name = "roamwise-api"
+main = "src/index.ts"
+compatibility_date = "2025-06-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "roamwise"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "RECEIPTS"
+bucket_name = "roamwise-receipts"
