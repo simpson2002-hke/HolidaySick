@@ -28,3 +28,23 @@ Workers access D1 and R2 through bindings, so credentials never need to be expos
 - `GET /admin/health` (Bearer `API_TOKEN`) performs D1 and R2 read/write health checks.
 
 Amounts are stored as integer minor units (for example, cents), avoiding floating-point errors. Authentication and membership authorization should be applied before exposing trip routes in production.
+
+## Publish a live preview with GitHub Pages
+
+The repository includes a GitHub Actions workflow that builds the web app and publishes it to GitHub Pages whenever you push to the `work` branch.
+
+1. Create a GitHub repository, then add it as this project's remote:
+   ```bash
+   git remote add origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME.git
+   git push -u origin work
+   ```
+2. On GitHub, open **Settings → Pages**. Under **Build and deployment**, select **GitHub Actions** as the source, then save. This is required only once per repository.
+3. Open the **Actions** tab and select **Deploy web app to GitHub Pages**. The first push starts it automatically; use **Run workflow** to publish manually later.
+4. When the job is green, click its **deploy** job or open **Settings → Pages**. GitHub shows the public address, normally `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/`.
+
+### Before you publish
+
+- The live preview contains sample travel and expense data only; it does **not** connect to the Worker yet.
+- GitHub Pages is suitable for hosting this frontend. Deploy the API separately with the Cloudflare steps above, and use Worker secrets—not GitHub Pages variables—for private keys.
+- If your default branch is not `work`, update `branches: [work]` in `.github/workflows/deploy-pages.yml` to the branch you push.
+- For a private repository, GitHub Pages availability depends on your GitHub plan and organization policy.
